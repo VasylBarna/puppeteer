@@ -9,25 +9,29 @@ const scrape = async () => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir)
   }
-
   const browser = await puppeteer.launch({ headless: true, ignoreHTTPSErrors: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'] })
   const page = await browser.newPage()
-
+   
   page.setViewport({
     width:1920,
     height: 1080
   })
 
+  // const context = browser.defaultBrowserContext();
+  // await context.overridePermissions(URL, ['geolocation']);
+
   await page.goto(URL,
      { waitUntil: ['networkidle2', 'domcontentloaded' ]}
   )
+  
+  // await page.setGeolocation({latitude: 90, longitude: 0});
+
+  await page.waitForSelector('body')
 
   await page.screenshot({
     path: 'screens/fullpage.png',
     fullPage: true,
   })
-
-  await page.waitForSelector('body')
 
   const result = await page.evaluate(() => {
 
@@ -66,8 +70,8 @@ const scrape = async () => {
     })
   })
 
-  const jsonData = JSON.stringify(result, null, 2);
-  fs.writeFileSync('amazonSearchResults.json', jsonData) 
+  const jsonData = JSON.stringify([result], null, 2);
+  fs.writeFileSync('data.json', jsonData) 
 
   
   await browser.close()

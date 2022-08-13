@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prestart": "node amazon.js",
+    "start": "node ./createTable.js",
+    "poststart": "node ./createPdf.js"
   },
   "repository": {
     "type": "git",
@@ -20,8 +22,5 @@
   "dependencies": {
     "fs": "^0.0.1-security",
     "puppeteer": "^16.1.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.19"
   }
 }
